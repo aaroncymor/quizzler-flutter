@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'question.dart';
 
 void main() => runApp(Quizzler());
 
@@ -26,25 +27,15 @@ class QuizPage extends StatefulWidget {
 
 class _QuizPageState extends State<QuizPage> {
   int questionCtr = 0;
-
+  List<Question> questions = [
+    Question('You can lead a cow down stairs but not up stairs.', false),
+    Question('Approximately one quarter of human bones are in the feet.', true),
+    Question('A slug\'s blood is green.', true),
+  ];
   List<Widget> scoreKeeper = [];
-  var items = {
-    0: {
-      "question": 'You can lead a cow down stairs but not up stairs.',
-      "answer": false,
-    },
-    1: {
-      "question": 'Approximately one quarter of human bones are in the feet.',
-      "answer": true,
-    },
-    2: {
-      "question": 'A slug\'s blood is green.',
-      "answer": true
-    }
-  };
 
   void updateScore(bool userAnswer, bool correctAnswer) {
-    if (items.length != scoreKeeper.length){
+    if (questions.length != scoreKeeper.length){
       if (userAnswer == correctAnswer){
         scoreKeeper.add(
           Icon(Icons.check,
@@ -73,7 +64,7 @@ class _QuizPageState extends State<QuizPage> {
             padding: EdgeInsets.all(10.0),
             child: Center(
               child: Text(
-                items[questionCtr]["question"],
+                questions[questionCtr].item,
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 25.0,
@@ -98,12 +89,11 @@ class _QuizPageState extends State<QuizPage> {
               ),
               onPressed: () {
                 setState(() {
-                  bool answer = items[questionCtr]["answer"];
-                  if (questionCtr < items.length - 1){
-                    updateScore(true, answer);
+                  if (questionCtr < questions.length - 1){
+                    updateScore(true, questions[questionCtr].answer);
                     questionCtr++;
-                  } else if (questionCtr == items.length - 1) {
-                    updateScore(true, answer);
+                  } else if (questionCtr == questions.length - 1) {
+                    updateScore(true, questions[questionCtr].answer);
                   }
                 });
               },
@@ -124,12 +114,11 @@ class _QuizPageState extends State<QuizPage> {
               ),
               onPressed: () {
                 setState(() {
-                  bool answer = items[questionCtr]["answer"];
-                  if (questionCtr < items.length - 1){
-                    updateScore(false, answer);
+                  if (questionCtr < questions.length - 1){
+                    updateScore(false, questions[questionCtr].answer);
                     questionCtr++;
-                  } else if (questionCtr == items.length - 1) {
-                    updateScore(false, answer);
+                  } else if (questionCtr == questions.length - 1) {
+                    updateScore(false, questions[questionCtr].answer);
                   }
                 });
                 //The user picked false.
