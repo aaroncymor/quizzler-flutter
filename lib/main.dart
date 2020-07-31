@@ -25,6 +25,42 @@ class QuizPage extends StatefulWidget {
 }
 
 class _QuizPageState extends State<QuizPage> {
+  int questionCtr = 0;
+
+  List<Widget> scoreKeeper = [];
+  var items = {
+    0: {
+      "question": 'You can lead a cow down stairs but not up stairs.',
+      "answer": false,
+    },
+    1: {
+      "question": 'Approximately one quarter of human bones are in the feet.',
+      "answer": true,
+    },
+    2: {
+      "question": 'A slug\'s blood is green.',
+      "answer": true
+    }
+  };
+
+  void updateScore(bool userAnswer, bool correctAnswer) {
+    if (items.length != scoreKeeper.length){
+      if (userAnswer == correctAnswer){
+        scoreKeeper.add(
+          Icon(Icons.check,
+            color: Colors.green,
+          )
+        );
+      } else {
+        scoreKeeper.add(
+          Icon(Icons.close,
+            color: Colors.red,
+          )
+        );
+      }      
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -37,7 +73,7 @@ class _QuizPageState extends State<QuizPage> {
             padding: EdgeInsets.all(10.0),
             child: Center(
               child: Text(
-                'This is where the question text will go.',
+                items[questionCtr]["question"],
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 25.0,
@@ -61,7 +97,15 @@ class _QuizPageState extends State<QuizPage> {
                 ),
               ),
               onPressed: () {
-                //The user picked true.
+                setState(() {
+                  bool answer = items[questionCtr]["answer"];
+                  if (questionCtr < items.length - 1){
+                    updateScore(true, answer);
+                    questionCtr++;
+                  } else if (questionCtr == items.length - 1) {
+                    updateScore(true, answer);
+                  }
+                });
               },
             ),
           ),
@@ -79,12 +123,24 @@ class _QuizPageState extends State<QuizPage> {
                 ),
               ),
               onPressed: () {
+                setState(() {
+                  bool answer = items[questionCtr]["answer"];
+                  if (questionCtr < items.length - 1){
+                    updateScore(false, answer);
+                    questionCtr++;
+                  } else if (questionCtr == items.length - 1) {
+                    updateScore(false, answer);
+                  }
+                });
                 //The user picked false.
               },
             ),
           ),
         ),
-        //TODO: Add a Row here as your score keeper
+
+        Row(
+          children: scoreKeeper,
+        )
       ],
     );
   }
